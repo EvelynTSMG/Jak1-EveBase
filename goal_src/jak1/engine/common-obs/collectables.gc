@@ -1055,7 +1055,7 @@
         (send-event *target* 'blend-shape #f)
       )
 
-      (when (or (not (-> *pc-settings* skip-cells?)) (and (not *flutflut?*) (not *racer?*)))
+      (when (or (not (-> *pc-settings* skip-cells?)) (and (not flutflut?) (not racer?)))
         (send-event *target* 'end-mode)
       )
 
