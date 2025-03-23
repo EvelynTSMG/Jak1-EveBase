@@ -852,8 +852,10 @@
 (defstate fisher-fish-fall (fisher-fish)
   :code
     (behavior ()
-      (set-heading-vec! (-> self root)
-                        (eval-path-curve-angle (-> (fisher-parent) path) (-> self dir) (-> self pos)))
+      (set-heading-vec!
+        (-> self root)
+        (eval-path-curve-angle (-> (fisher-parent) path) (-> self dir) (-> self pos))
+      )
       (loop
         (ja-no-eval :group! (ja-group) :num! (seek!) :frame-num 0.0)
         (until (ja-done? 0)
