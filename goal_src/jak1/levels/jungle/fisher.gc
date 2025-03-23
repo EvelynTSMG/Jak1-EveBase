@@ -1088,7 +1088,7 @@
     (when (-> *pc-settings* extra-hud?)
       (fisher-draw-display-progress ctx
         (lookup-text! *common-text* (text-id wave) #f)
-        (min 1 (-> this wave)) ; Avoid displaying the initial 2 seconds of wait time as Wave 0
+        (max 1 (-> this wave)) ; Avoid displaying the initial 2 seconds of wait time as Wave 0
         (-> *fisher-wave-counts* (-> this pity))
       )
       (+! (-> ctx origin y) line-height)
