@@ -59,7 +59,7 @@
             (cond
               ((or (= v0-4 (task-status need-hint)) (= v0-4 (task-status unknown)))
                (if (= *kernel-boot-message* 'play) (set! (-> this particle-state s0-0) 1)))
-              ((= v0-4 (task-status invalid))
+              ((= v0-4 (task-status complete))
                (set! v1-59 (-> s5-0 task-info sv-208 text-index-when-resolved))
                (set! (-> this particle-state s0-0) 3)
                (set! a0-25 #t))

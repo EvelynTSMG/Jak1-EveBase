@@ -438,7 +438,7 @@
       ((-> (method-of-type process-taskable play-anim) enter)))
   :exit
     (behavior ()
-      (when (= (current-status (-> self tasks)) (task-status invalid))
+      (when (= (current-status (-> self tasks)) (task-status complete))
         (cond
           ((not (-> self credits-played)) (set! (-> self kick-the-credits) #t))
           (else (set-blackout-frames 0) (initialize! *game-info* 'game (the-as game-save #f) "title-start"))))
@@ -477,7 +477,7 @@
          (if (target-has-all-the-cells?)
            (set! (-> self kick-in-the-door) #t)
            (start 'play (get-continue-by-name *game-info* "finalboss-start"))))
-        ((= (current-status (-> self tasks)) (task-status invalid)))
+        ((= (current-status (-> self tasks)) (task-status complete)))
         (else (set-blackout-frames (seconds 100))))
       (dotimes (v1-84 9)
         (set! (-> self particle v1-84 active) #f))
@@ -578,7 +578,7 @@
 (defstate sage-finalboss-credits (sage-finalboss)
   :exit
     (behavior ()
-      (when (= (current-status (-> self tasks)) (task-status invalid))
+      (when (= (current-status (-> self tasks)) (task-status complete))
         (set-blackout-frames 0)
         (initialize! *game-info* 'game (the-as game-save #f) "title-start")))
   :code

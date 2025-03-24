@@ -142,7 +142,7 @@
 (defmethod target-above-threshold? ((this sage-villagec))
   (the-as symbol (and *target* (< (-> (target-pos 0) x) 4575232.0) (< -14323302.0 (-> (target-pos 0) z)))))
 
-(defmethod process-taskable-method-43 ((this sage-villagec))
+(defmethod do-idle-ambience ((this sage-villagec))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond

@@ -338,11 +338,11 @@
         (else (return (-> this im-talking))))))
   (the-as symbol 0))
 
-(defmethod process-taskable-method-43 ((this assistant-bluehut))
+(defmethod do-idle-ambience ((this assistant-bluehut))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f30-0 (rand-float-gen)))
       (cond
-        ((= (get-task-status (game-task village2-levitator)) (task-status invalid)) #f)
+        ((= (get-task-status (game-task village2-levitator)) (task-status complete)) #f)
         ((< 0.5 f30-0) (play-ambient (-> this ambient) "ASSTLP23" #f (-> this root trans)))
         (else (play-ambient (-> this ambient) "ASSTLP24" #f (-> this root trans)))))))
 
@@ -364,7 +364,7 @@
         (let ((f0-9 (rand-float-gen)))
           (cond
             ((< f0-9 0.33333334)
-             (process-taskable-method-43 self)
+             (do-idle-ambience self)
              (ja-no-eval :group! assistant-village2-idle-hut-look-right-ja :num! (seek!) :frame-num 0.0)
              (until (ja-done? 0)
                (suspend)
@@ -1028,7 +1028,7 @@
        (-> this draw art-group data 5)))))
 
 (defmethod get-art-elem ((this assistant-levitator))
-  (if (= (get-task-status (game-task village2-levitator)) (task-status invalid))
+  (if (= (get-task-status (game-task village2-levitator)) (task-status complete))
     (-> this draw art-group data 9)
     (-> this draw art-group data 5)))
 
@@ -1097,7 +1097,7 @@
       (if (!= (ja-group) (get-art-elem self)) (ja-channel-push! 1 (seconds 0.05)))
       (loop
         (cond
-          ((= (get-task-status (game-task village2-levitator)) (task-status invalid))
+          ((= (get-task-status (game-task village2-levitator)) (task-status complete))
            (ja-no-eval :group! assistant-village2-idle-after-ja :num! (seek!) :frame-num 0.0)
            (until (ja-done? 0)
              (assistant-levitator-blue-beam)
@@ -1154,7 +1154,7 @@
   (set! (-> this particle 2) (create-launch-control (-> *part-group-id-table* 660) this))
   (set! (-> this particle 3) (create-launch-control (-> *part-group-id-table* 661) this))
   (set! (-> this sound) (new 'process 'ambient-sound (static-sound-spec "lev-mach-idle" :fo-max 30) (-> this root trans)))
-  (if (= (get-task-status (game-task village2-levitator)) (task-status invalid))
+  (if (= (get-task-status (game-task village2-levitator)) (task-status complete))
     (go just-particles)
     (process-taskable-method-42 this))
   (none))

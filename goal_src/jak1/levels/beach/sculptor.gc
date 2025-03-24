@@ -118,10 +118,10 @@
 
 (defmethod get-art-elem ((this sculptor))
   (case (current-status (-> this tasks))
-    (((task-status invalid) (task-status need-resolution)) (-> this draw art-group data 11))
+    (((task-status complete) (task-status need-resolution)) (-> this draw art-group data 11))
     (else (-> this draw art-group data 3))))
 
-(defmethod process-taskable-method-43 ((this sculptor))
+(defmethod do-idle-ambience ((this sculptor))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
@@ -145,7 +145,7 @@
         (suspend)
         (ja-eval))
       (case (current-status (-> self tasks))
-        (((task-status invalid) (task-status need-resolution))
+        (((task-status complete) (task-status need-resolution))
          (ja-no-eval :group! sculptor-from-looking-ja :num! (seek!) :frame-num 0.0)
          (until (ja-done? 0)
            (suspend)
@@ -154,7 +154,7 @@
       (loop
         (let ((v1-43 (current-status (-> self tasks))))
           (cond
-            ((or (= v1-43 (task-status invalid)) (= v1-43 (task-status need-resolution)))
+            ((or (= v1-43 (task-status complete)) (= v1-43 (task-status need-resolution)))
              (ja-no-eval :group! sculptor-to-small-ja :num! (seek!) :frame-num 0.0)
              (until (ja-done? 0)
                (suspend)
@@ -206,7 +206,7 @@
                    (suspend)
                    (ja :num! (seek!))))))
             ((begin
-               (process-taskable-method-43 self)
+               (do-idle-ambience self)
                (let* ((f30-3 4.0)
                       (v1-287 (/ (the-as int (rand-uint31-gen *random-generator*)) 256))
                       (v1-288 (the-as number (logior #x3f800000 v1-287))))

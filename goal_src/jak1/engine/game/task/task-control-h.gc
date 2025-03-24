@@ -25,14 +25,15 @@
 ;; some tasks may do their own thing and not use these values.
 (defenum task-status
   :type uint64
-  (invalid 0)
+  (complete 0)
   (unknown 1)
   (need-hint 2)
   (need-introduction 3)
   (need-reminder-a 4)
   (need-reminder 5)
   (need-reward-speech 6)
-  (need-resolution 7))
+  (need-resolution 7)
+)
 
 ;; our names
 (defenum task-flags
@@ -40,7 +41,8 @@
   :bitfield #t
   (closed 0)
   (has-entity 1)
-  (closed-by-default 2))
+  (closed-by-default 2)
+)
 
 (declare-type task-control basic)
 
@@ -137,7 +139,7 @@
    (process-taskable-method-40 (_type_ object skeleton-group int int vector int) none)
    (initialize-collision (_type_ int vector) none)
    (process-taskable-method-42 (_type_) none)
-   (process-taskable-method-43 (_type_) symbol)
+   (do-idle-ambience (_type_) symbol)
    (play-reminder (_type_) symbol)
    (process-taskable-method-45 (_type_) symbol)
    (process-taskable-method-46 (_type_) none)

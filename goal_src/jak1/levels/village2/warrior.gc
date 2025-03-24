@@ -98,7 +98,7 @@
       (send-event (-> (entity-by-type allpontoons) extra process) 'end-mode)
       ((-> (method-of-type process-taskable play-anim) exit))))
 
-(defmethod process-taskable-method-43 ((this warrior))
+(defmethod do-idle-ambience ((this warrior))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 2) 61440.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond

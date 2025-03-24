@@ -85,7 +85,7 @@
 (defmethod get-art-elem ((this gambler))
   (-> this draw art-group data 7))
 
-(defmethod process-taskable-method-43 ((this gambler))
+(defmethod do-idle-ambience ((this gambler))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 61440.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
@@ -117,7 +117,7 @@
         (until (ja-done? 0)
           (suspend)
           (ja :num! (seek!)))
-        (process-taskable-method-43 self)
+        (do-idle-ambience self)
         (let ((f0-9 (rand-float-gen)))
           (cond
             ((< f0-9 0.16666667) (ja :group! gambler-idle-tiptoe-ja))

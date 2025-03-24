@@ -93,7 +93,7 @@
 (defmethod get-art-elem ((this explorer))
   (-> this draw art-group data 3))
 
-(defmethod process-taskable-method-43 ((this explorer))
+(defmethod do-idle-ambience ((this explorer))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
@@ -118,7 +118,7 @@
     (behavior ()
       (if (!= (ja-group) explorer-idle-ja) (ja-channel-push! 1 (seconds 0.2)))
       (loop
-        (process-taskable-method-43 self)
+        (do-idle-ambience self)
         (ja :group! explorer-idle-ja)
         (let* ((f30-0 2.0)
                (v1-11 (/ (the-as int (rand-uint31-gen *random-generator*)) 256))

@@ -169,7 +169,7 @@
   (loop
     (suspend)
     (ja :num! (loop!))
-    (if (= (-> self next-state name) 'idle) (process-taskable-method-43 self)))
+    (if (= (-> self next-state name) 'idle) (do-idle-ambience self)))
   (the-as none 0)
   (none))
 
@@ -674,12 +674,21 @@
 
 (defmethod process-taskable-method-42 ((this process-taskable))
   (cond
-    ((not (should-display? this)) (go (method-of-object this hidden)))
-    ((= (current-status (-> this tasks)) (task-status need-resolution)) (go (method-of-object this give-cell)))
-    (else (go (method-of-object this idle))))
-  (none))
+    ((not (should-display? this))
+      (go (method-of-object this hidden))
+    )
+    ((= (current-status (-> this tasks)) (task-status need-resolution))
+      (go (method-of-object this give-cell))
+    )
+    (else
+      (go (method-of-object this idle))
+    )
+  )
 
-(defmethod process-taskable-method-43 ((this process-taskable))
+  (none)
+)
+
+(defmethod do-idle-ambience ((this process-taskable))
   (the-as symbol 0))
 
 (defmethod ambient-control-method-9 ((this ambient-control))

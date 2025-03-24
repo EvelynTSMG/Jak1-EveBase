@@ -355,7 +355,7 @@
   (set! (-> this prev-frame) -1000.0)
   (set! (-> this draw origin-joint-index) (the-as uint 4))
   (case (get-task-status (-> this entity extra perm task))
-    (((task-status invalid)) (go (method-of-object this fallen)))
+    (((task-status complete)) (go (method-of-object this fallen)))
     (((task-status need-resolution))
      (let ((s5-0 (new 'stack-no-clear 'vector)))
        (ja-post)

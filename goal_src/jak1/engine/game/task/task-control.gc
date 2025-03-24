@@ -90,8 +90,8 @@
   (cond
     ((= this *null-task-control*)
      (format 0 "ERROR<GMJ>: current-status received self of *null-task-control*~%~%")
-     (task-status invalid))
-    ((= (-> this current-stage) -1) (task-status invalid))
+     (task-status complete))
+    ((= (-> this current-stage) -1) (task-status complete))
     (else (-> this stage (-> this current-stage) status))))
 
 (defmethod close-current! ((this task-control))
@@ -4994,7 +4994,7 @@
           (first-any gp-0 #t)
           (return (the-as task-status (-> gp-0 stage s5-0 status))))))
     (first-any gp-0 #t))
-  (task-status invalid))
+  (task-status complete))
 
 (defun close-specific-task! ((arg0 game-task) (arg1 task-status))
   "Close a cstage for a game-task"
@@ -5038,7 +5038,7 @@
       (task-status need-reminder)
       (task-status need-reminder-a)
       (task-status need-resolution)
-      (task-status invalid))
+      (task-status complete))
      #t)
     (else #f)))
 

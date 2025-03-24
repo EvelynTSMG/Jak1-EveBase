@@ -207,7 +207,7 @@
              (gp-0 (+ (the int (* f30-0 (+ -1.0 (the-as float v1-5)))) 3000)))
         (set-time! (-> self state-time))
         (loop
-          (when (and (!= (get-task-status (game-task rolling-plants)) (task-status invalid))
+          (when (and (!= (get-task-status (game-task rolling-plants)) (task-status complete))
                      (!= (get-task-status (game-task rolling-plants)) 7))
             (cond
               ((time-elapsed? (-> self state-time) gp-0) (go dark-plant-sprout))
@@ -335,7 +335,7 @@
   (if (zero? (-> this num-alts)) (format 0 "ERROR<GMJ>: ~S has no alternates~%" (-> this name)))
   (dark-plant-randomize this)
   (case (get-task-status (game-task rolling-plants))
-    (((task-status invalid) (task-status need-resolution)) (go dark-plant-gone))
+    (((task-status complete) (task-status need-resolution)) (go dark-plant-gone))
     (else (go dark-plant-startup)))
   (none))
 
@@ -448,7 +448,7 @@
   (initialize-skeleton this *happy-plant-sg* '())
   (set! (-> this alt-actor) (entity-actor-lookup (-> this entity) 'alt-actor 0))
   (case (get-task-status (game-task rolling-plants))
-    (((task-status invalid))
+    (((task-status complete))
      (let ((v1-19 (-> this skel root-channel 0)))
        (set! (-> v1-19 frame-group) (the-as art-joint-anim (-> this draw art-group data 4))))
      (go happy-plant-opened))

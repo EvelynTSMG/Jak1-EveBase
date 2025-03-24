@@ -44,11 +44,11 @@
 
 (defmethod get-art-elem ((this farmer))
   (case (current-status (-> this tasks))
-    (((task-status need-hint) (task-status need-introduction) (task-status need-resolution) (task-status invalid))
+    (((task-status need-hint) (task-status need-introduction) (task-status need-resolution) (task-status complete))
      (-> this draw art-group data 4))
     (else (-> this draw art-group data 5))))
 
-(defmethod process-taskable-method-43 ((this farmer))
+(defmethod do-idle-ambience ((this farmer))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond

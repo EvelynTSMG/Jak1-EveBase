@@ -340,7 +340,7 @@
 
 (defmethod get-art-elem ((this billy))
   (case (current-status (-> this tasks))
-    (((task-status invalid) (task-status need-resolution)) (-> this draw art-group data 10))
+    (((task-status complete) (task-status need-resolution)) (-> this draw art-group data 10))
     (else (-> this draw art-group data 3))))
 
 (defmethod process-taskable-method-38 ((this billy))
@@ -682,7 +682,7 @@
             (v1-8 (move-to-point! (-> *target* control) (-> v1-8 extra trans)) (go billy-playing))
             (else))))))
 
-(defmethod process-taskable-method-43 ((this billy))
+(defmethod do-idle-ambience ((this billy))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f30-0 (rand-float-gen)))
       (cond
@@ -697,7 +697,7 @@
         ((< 0.47058824 f30-0) (play-ambient (-> this ambient) "BIL-AM1A" #f (-> this root trans)))
         ((< 0.4117647 f30-0) (play-ambient (-> this ambient) "BIL-AM2A" #f (-> this root trans)))
         ((< 0.3529412 f30-0) (play-ambient (-> this ambient) "BIL-AM2B" #f (-> this root trans)))
-        ((= (current-status (-> this tasks)) (task-status invalid)) #f)
+        ((= (current-status (-> this tasks)) (task-status complete)) #f)
         ((< 0.29411766 f30-0) (play-ambient (-> this ambient) "BIL-LO01" #f (-> this root trans)))
         ((< 0.23529412 f30-0) (play-ambient (-> this ambient) "BIL-LO02" #f (-> this root trans)))
         ((< 0.1764706 f30-0) (play-ambient (-> this ambient) "BIL-LO03" #f (-> this root trans)))
@@ -725,7 +725,7 @@
           (countdown (gp-1 (+ (the int (* f30-0 (+ -1.0 (the-as float v1-10)))) 5))
             (ja-no-eval :group! (ja-group) :num! (seek!) :frame-num 0.0)
             (until (ja-done? 0)
-              (process-taskable-method-43 self)
+              (do-idle-ambience self)
               (suspend)
               (ja :num! (seek!)))))
         (when (ja-group? billy-idle-breath-ja)

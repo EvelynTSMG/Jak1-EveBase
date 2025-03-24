@@ -481,7 +481,7 @@
       (clear-collide-with-as (-> self root))
       (logior! (-> self draw status) (draw-status hidden))
       (loop
-        (when (= (get-task-status (-> self entity extra perm task)) (task-status invalid))
+        (when (= (get-task-status (-> self entity extra perm task)) (task-status complete))
           (if (not (-> self child)) (go swamp-tetherrock-die)))
         (suspend))))
 
@@ -671,7 +671,7 @@
   (quaternion-copy! (-> this rot-at-init) (-> this root quat))
   (logclear! (-> this mask) (process-mask actor-pause))
   (case (get-task-status (-> this entity extra perm task))
-    (((task-status invalid)) (go swamp-tetherrock-die))
+    (((task-status complete)) (go swamp-tetherrock-die))
     (((task-status need-resolution))
      (birth-pickup-at-point (-> this root trans)
                             (pickup-type fuel-cell)
@@ -800,7 +800,7 @@
   (process-entity-status! this (entity-perm-status bit-7) #t)
   (logclear! (-> this mask) (process-mask actor-pause))
   (set! (-> this event-hook) (-> precursor-arm-idle event))
-  (if (= (get-task-status (-> this entity extra perm task)) (task-status invalid))
+  (if (= (get-task-status (-> this entity extra perm task)) (task-status complete))
     (go precursor-arm-die)
     (go precursor-arm-idle))
   (none))

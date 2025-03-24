@@ -54,43 +54,75 @@
   "Set the options for all of the menus."
   ;; start off by making them all invalid
   (dotimes (i (progress-screen max))
-    (set! (-> *options-remap* i) #f))
+    (set! (-> *options-remap* i) #f)
+  )
+
   ;; main menu
   (set! (-> *options-remap* (progress-screen settings))
-        (case *kernel-boot-message*
-          (('demo)
-           ;; game demo
-           *main-options-demo*)
-          (('demo-shared)
-           ;; game demo with external launcher
-           *main-options-demo-shared*)
-          (else
-           ;; normal game
-           *main-options*)))
+    (case *kernel-boot-message*
+      ;; game demo
+      (('demo) *main-options-demo*)
+
+      ;; game demo with external launcher
+      (('demo-shared) *main-options-demo-shared*)
+
+      ;; normal game
+      (else *main-options*)
+    )
+  )
+
   (set! (-> *options-remap* (progress-screen game-settings))
-        (cond
-          ((!= *kernel-boot-message* 'play) (if (= (scf-get-territory) GAME_TERRITORY_SCEE) *game-options* *game-options-demo*))
-          ((and (= (scf-get-territory) GAME_TERRITORY_SCEI)
-                (not (and (= *progress-cheat* 'language) (cpad-hold? 0 l2) (cpad-hold? 0 r2))))
-           ;; if ntsc-j and we're not using language cheat (and holding l2+r2)
-           *game-options-japan*)
-          (else *game-options*)))
+    (cond
+      ((!= *kernel-boot-message* 'play)
+        (if (= (scf-get-territory) GAME_TERRITORY_SCEE)
+          *game-options*
+          *game-options-demo*
+        )
+      )
+      ((and
+            (= (scf-get-territory) GAME_TERRITORY_SCEI) ; ntsc-j
+            (not
+              (and
+                (= *progress-cheat* 'language)
+                (cpad-hold? 0 l2)
+                (cpad-hold? 0 r2)
+              )
+            )
+          )
+        *game-options-japan*
+      )
+      (else *game-options*)
+    )
+  )
   (set! (-> *options-remap* (progress-screen graphic-settings))
-        (if (and (= (-> *progress-state* starting-state) (progress-screen title))
-                 (or (= (scf-get-territory) GAME_TERRITORY_SCEE) (and (= *progress-cheat* 'pal) (cpad-hold? 0 l2) (cpad-hold? 0 r2))))
-          ;; (only if we came from title) if PAL or we're using the PAL cheat (and holding l2+r2)
-          *graphic-title-options-pal*
-          *graphic-options*))
+    (if (and
+          (= (-> *progress-state* starting-state) (progress-screen title))
+          (or
+            (= (scf-get-territory) GAME_TERRITORY_SCEE) ; pal
+            (and
+              (= *progress-cheat* 'pal)
+              (cpad-hold? 0 l2)
+              (cpad-hold? 0 r2)
+            )
+          )
+        )
+      *graphic-title-options-pal*
+      *graphic-options*
+    )
+  )
   (set! (-> *options-remap* (progress-screen sound-settings)) *sound-options*)
+
   (set! (-> *options-remap* (progress-screen memcard-no-space)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-not-inserted)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-not-formatted)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-format)) *yes-no-options*)
   (set! (-> *options-remap* (progress-screen memcard-data-exists)) *yes-no-options*)
   (set! (-> *options-remap* (progress-screen memcard-insert)) *ok-options*)
+
   (set! (-> *options-remap* (progress-screen load-game)) *load-options*)
   (set! (-> *options-remap* (progress-screen save-game)) *save-options*)
   (set! (-> *options-remap* (progress-screen save-game-title)) *save-options-title*)
+
   (set! (-> *options-remap* (progress-screen memcard-error-loading)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-error-saving)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-error-formatting)) *ok-options*)
@@ -98,30 +130,42 @@
   (set! (-> *options-remap* (progress-screen memcard-auto-save-error)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-removed)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-no-data)) *yes-no-options*)
+
   (set! (-> *options-remap* (progress-screen title)) *title*)
   (set! (-> *options-remap* (progress-screen settings-title)) *options*)
   (set! (-> *options-remap* (progress-screen auto-save)) *ok-options*)
+
   (set! (-> *options-remap* (progress-screen pal-change-to-60hz)) *yes-no-options*)
   (set! (-> *options-remap* (progress-screen pal-now-60hz)) *yes-no-options*)
+
   (set! (-> *options-remap* (progress-screen no-disc)) *ok-options*)
   (set! (-> *options-remap* (progress-screen bad-disc)) *ok-options*)
+
   (set! (-> *options-remap* (progress-screen quit)) *yes-no-options*)
+
   (set! (-> *progress-state* aspect-ratio-choice) (get-aspect-ratio))
   (set! (-> *progress-state* video-mode-choice) (get-video-mode))
   (set! (-> *progress-state* yes-no-choice) #f)
+
   (set! (-> *game-options* 0 value-to-modify) (&-> *setting-control* default vibration))
   (set! (-> *game-options* 1 value-to-modify) (&-> *setting-control* default play-hints))
   (set! (-> *game-options* 2 value-to-modify) (&-> *setting-control* default language))
+
   (set! (-> *game-options-japan* 0 value-to-modify) (&-> *setting-control* default vibration))
   (set! (-> *game-options-japan* 1 value-to-modify) (&-> *setting-control* default play-hints))
+
   (set! (-> *game-options-demo* 0 value-to-modify) (&-> *setting-control* default vibration))
   (set! (-> *game-options-demo* 1 value-to-modify) (&-> *setting-control* default play-hints))
+
   (set! (-> *graphic-options* 1 value-to-modify) (&-> *progress-state* aspect-ratio-choice))
+
   (set! (-> *graphic-title-options-pal* 1 value-to-modify) (&-> *progress-state* video-mode-choice))
   (set! (-> *graphic-title-options-pal* 2 value-to-modify) (&-> *progress-state* aspect-ratio-choice))
+
   (set! (-> *sound-options* 0 value-to-modify) (&-> *setting-control* default sfx-volume))
   (set! (-> *sound-options* 1 value-to-modify) (&-> *setting-control* default music-volume))
   (set! (-> *sound-options* 2 value-to-modify) (&-> *setting-control* default dialog-volume))
+
   (set! (-> *yes-no-options* 0 value-to-modify) (&-> *progress-state* yes-no-choice))
   (none))
 
@@ -200,32 +244,49 @@
    Cells are tallied 80%
    Buzzers are tallied 10%
    Orbs are tallied 10%"
-  (let ((current-cells 0)
+  (let (
+        (current-cells 0)
         (current-buzzers 0)
         (current-orbs 0)
         (total-cells 0)
         (total-buzzers 0)
-        (total-orbs 0))
+        (total-orbs 0)
+      )
     (dotimes (s5-0 (length *level-task-data*))
-      (let ((s4-0 (-> *level-task-data* s5-0)))
-        (when (!= s4-0 #f)
-          (when (or (= *kernel-boot-message* 'play) (= (-> s4-0 level-name-id) (text-id misty-level-name)))
-            (dotimes (s3-0 (-> s4-0 nb-of-tasks))
-              (if (= (get-task-status (-> s4-0 task-info s3-0 task-id)) (task-status invalid)) (1+! current-cells)))
-            (set! total-cells (+ total-cells (-> s4-0 nb-of-tasks)))
+      (let ((task-data (-> *level-task-data* s5-0)))
+        (when (!= task-data #f)
+          (when (or (= *kernel-boot-message* 'play) (= (-> task-data level-name-id) (text-id misty-level-name)))
+            (dotimes (s3-0 (-> task-data nb-of-tasks))
+              (if (= (get-task-status (-> task-data task-info s3-0 task-id)) (task-status complete))
+                (+! current-cells 1)
+              )
+            )
+            (set! total-cells (+ total-cells (-> task-data nb-of-tasks)))
             (set! current-orbs (+ current-orbs (-> *game-info* money-per-level s5-0)))
             (set! total-orbs (+ total-orbs (-> *game-counts* data s5-0 money-count)))
-            (let ((v1-20 (-> s4-0 buzzer-task-index)))
+            (let ((v1-20 (-> task-data buzzer-task-index)))
               (when (!= v1-20 -1)
-                (set! current-buzzers (+ current-buzzers (buzzer-count *game-info* (-> s4-0 task-info v1-20 task-id))))
-                (set! total-buzzers (+ total-buzzers (-> *game-counts* data s5-0 buzzer-count)))))))))
+                (set! current-buzzers (+ current-buzzers (buzzer-count *game-info* (-> task-data task-info v1-20 task-id))))
+                (set! total-buzzers (+ total-buzzers (-> *game-counts* data s5-0 buzzer-count)))
+              )
+            )
+          )
+        )
+      )
+    )
+
     (when the-progress
       (set! (-> the-progress total-nb-of-power-cells) total-cells)
       (set! (-> the-progress total-nb-of-buzzers) total-buzzers)
-      (set! (-> the-progress total-nb-of-orbs) total-orbs))
-    (+ (/ (* 80.0 (the float current-cells)) (the float total-cells))
-       (/ (* 10.0 (the float current-orbs)) (the float total-orbs))
-       (/ (* 10.0 (the float current-buzzers)) (the float total-buzzers)))))
+      (set! (-> the-progress total-nb-of-orbs) total-orbs)
+    )
+
+    (+ (/ (* 80.0 (the float   current-cells)) (the float   total-cells))
+       (/ (* 10.0 (the float    current-orbs)) (the float    total-orbs))
+       (/ (* 10.0 (the float current-buzzers)) (the float total-buzzers))
+    )
+  )
+)
 
 (define *progress-save-info* (new 'global 'mc-slot-info))
 

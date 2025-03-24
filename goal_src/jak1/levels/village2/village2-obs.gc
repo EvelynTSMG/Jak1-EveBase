@@ -619,7 +619,7 @@
   (set! (-> this task) (the-as uint (-> arg0 extra perm task)))
   (cond
     ((zero? (-> this task)) (go fireboulder-idle))
-    ((= (get-task-status (-> arg0 extra perm task)) (task-status invalid)) (go fireboulder-hover))
+    ((= (get-task-status (-> arg0 extra perm task)) (task-status complete)) (go fireboulder-hover))
     (else (go fireboulder-idle)))
   (none))
 
@@ -907,7 +907,7 @@
    (:conerot-radius (meters 0) (meters 8))))
 
 (defbehavior ogreboss-village2-trans ogreboss-village2 ()
-  (when (= (get-task-status (game-task village2-levitator)) (task-status invalid))
+  (when (= (get-task-status (game-task village2-levitator)) (task-status complete))
     (cleanup-for-death self)
     (deactivate self))
   (none))

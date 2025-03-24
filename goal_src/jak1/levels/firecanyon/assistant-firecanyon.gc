@@ -47,7 +47,7 @@
      (-> this draw art-group data 3))))
 
 (defmethod get-art-elem ((this assistant-firecanyon))
-  (if (= (current-status (-> this tasks)) (task-status invalid))
+  (if (= (current-status (-> this tasks)) (task-status complete))
     (-> this draw art-group data 8)
     (-> this draw art-group data 3)))
 
@@ -86,7 +86,7 @@
       (loop
         (let ((gp-0 #t))
           (cond
-            ((= (current-status (-> self tasks)) (task-status invalid))
+            ((= (current-status (-> self tasks)) (task-status complete))
              (when (< (rand-float-gen) 0.5)
                (ja :group! assistant-firecanyon-idle-a-ja)
                (let* ((f30-0 2.0)

@@ -716,7 +716,7 @@
       (if (nonzero? (-> self sound)) (stop! (-> self sound)))
       (loop
         (suspend)
-        (when (= (get-task-status (the-as game-task (-> self alt-task))) (task-status invalid))
+        (when (= (get-task-status (the-as game-task (-> self alt-task))) (task-status complete))
           (close-specific-task! (-> self entity extra perm task) (task-status need-hint))
           (logclear! (-> self mask) (process-mask actor-pause))
           (go race-ring-active)))))
@@ -770,10 +770,10 @@
   (set! (-> this cyl length) 4096.0)
   (cond
     ((and (first-ring? this)
-          (!= (get-task-status (-> this entity extra perm task)) (task-status invalid))
+          (!= (get-task-status (-> this entity extra perm task)) (task-status complete))
           (!= (get-task-status (-> this entity extra perm task)) 7))
      (set! (-> this alt-task) (res-lump-value (-> this entity) 'alt-task uint))
-     (if (or (= (-> this alt-task) 0) (= (get-task-status (the-as game-task (-> this alt-task))) (task-status invalid)))
+     (if (or (= (-> this alt-task) 0) (= (get-task-status (the-as game-task (-> this alt-task))) (task-status complete)))
        (go race-ring-active)
        (go race-ring-wait)))
     ((and (last-ring? this) (= (get-task-status (-> this entity extra perm task)) (task-status need-resolution)))
@@ -788,7 +788,7 @@
                               #f
                               this
                               (the-as fact-info #f))))
-    ((and (last-ring? this) (!= (get-task-status (-> this entity extra perm task)) (task-status invalid)))))
+    ((and (last-ring? this) (!= (get-task-status (-> this entity extra perm task)) (task-status complete)))))
   (set! (-> this event-hook) (-> race-ring-idle event))
   (go race-ring-idle)
   (none))

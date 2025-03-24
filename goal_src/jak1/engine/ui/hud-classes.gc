@@ -878,7 +878,7 @@
                (completed-task-count 0))
            ;; determine number of cells collected in this level
            (dotimes (task-idx (-> *level-task-data* lvl-idx nb-of-tasks))
-             (if (= (get-task-status (-> *level-task-data* lvl-idx task-info task-idx task-id)) (task-status invalid))
+             (if (= (get-task-status (-> *level-task-data* lvl-idx task-info task-idx task-id)) (task-status complete))
                (+! completed-task-count 1)))
            ;; show cells/total collected this level
            (draw-string-xy-scaled (string-format "~D~%/~D" completed-task-count (-> *level-task-data* lvl-idx nb-of-tasks))

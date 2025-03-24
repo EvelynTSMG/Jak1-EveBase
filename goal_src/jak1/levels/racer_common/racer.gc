@@ -107,7 +107,7 @@
               (set! (-> self root root-prim prim-core action) (collide-action solid attackable-unused))
               (set! (-> self root root-prim prim-core offense) (collide-offense indestructible))
               (ja-post))
-             (((task-status invalid)) (goto cfg-77)))))
+             (((task-status complete)) (goto cfg-77)))))
         ((6)
          (if (or (task-closed? (game-task village2-levitator) (task-status need-hint))
                  (and *cheat-mode* (cpad-hold? 0 l3))

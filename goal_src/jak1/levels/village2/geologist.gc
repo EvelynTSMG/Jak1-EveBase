@@ -77,7 +77,7 @@
 (defmethod get-art-elem ((this geologist))
   (-> this draw art-group data 5))
 
-(defmethod process-taskable-method-43 ((this geologist))
+(defmethod do-idle-ambience ((this geologist))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond

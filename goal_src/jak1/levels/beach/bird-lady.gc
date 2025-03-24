@@ -86,7 +86,7 @@
 (defmethod get-art-elem ((this bird-lady))
   (-> this draw art-group data 3))
 
-(defmethod process-taskable-method-43 ((this bird-lady))
+(defmethod do-idle-ambience ((this bird-lady))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond

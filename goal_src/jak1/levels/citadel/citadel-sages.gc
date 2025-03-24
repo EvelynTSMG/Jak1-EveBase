@@ -263,13 +263,13 @@
 
 (defmethod get-art-elem ((this citb-sage))
   (cond
-    ((= (current-status (-> this tasks)) (task-status invalid))
+    ((= (current-status (-> this tasks)) (task-status complete))
      (set! (-> this beam-on) #t)
      (-> this draw art-group data (-> this attack-anim)))
     (else (-> this draw art-group data (-> this idle-anim)))))
 
 (defmethod should-display? ((this citb-sage))
-  (!= (get-task-status (game-task citadel-sage-green)) (task-status invalid)))
+  (!= (get-task-status (game-task citadel-sage-green)) (task-status complete)))
 
 (defstate hidden (citb-sage)
   :virtual #t
@@ -374,7 +374,7 @@
   (call-parent-method this)
   (the-as symbol 0))
 
-(defmethod process-taskable-method-43 ((this red-sagecage))
+(defmethod do-idle-ambience ((this red-sagecage))
   (if (-> this beam-on) (return #f))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
@@ -450,7 +450,7 @@
   (call-parent-method this)
   (the-as symbol 0))
 
-(defmethod process-taskable-method-43 ((this blue-sagecage))
+(defmethod do-idle-ambience ((this blue-sagecage))
   (if (-> this beam-on) (return #f))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
@@ -517,7 +517,7 @@
   (call-parent-method this)
   (the-as symbol 0))
 
-(defmethod process-taskable-method-43 ((this yellow-sagecage))
+(defmethod do-idle-ambience ((this yellow-sagecage))
   (if (-> this beam-on) (return #f))
   (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
@@ -735,7 +735,7 @@
       (let ((a0-5 (handle->process (-> self evilsis)))) (if a0-5 (deactivate a0-5)))
       (let ((a0-9 (handle->process (-> self robotboss)))) (if a0-9 (deactivate a0-9)))
       (let ((a0-13 (handle->process (-> self exitplat)))) (if a0-13 (deactivate a0-13)))
-      (when (= (current-status (-> self tasks)) (task-status invalid))
+      (when (= (current-status (-> self tasks)) (task-status complete))
         (let ((a1-4 (new 'stack-no-clear 'event-message-block)))
           (set! (-> a1-4 from) self)
           (set! (-> a1-4 num-params) 0)
@@ -798,7 +798,7 @@
   (set! (-> this robotboss) (the-as handle #f))
   (set! (-> this exitplat) (the-as handle #f))
   (cond
-    ((= (current-status (-> this tasks)) (task-status invalid)) (set! (-> this which-movie) 2))
+    ((= (current-status (-> this tasks)) (task-status complete)) (set! (-> this which-movie) 2))
     (else (set! (-> this which-movie) 0) 0))
   (set! (-> this sound-flava) (music-flava sage))
   (process-taskable-method-42 this)
