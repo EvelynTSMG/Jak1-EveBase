@@ -718,7 +718,7 @@
     (vector-! dst (target-pos 0) (-> source root trans))
     (vector-! dst (camera-pos)   (-> source root trans))
   )
-  arg1
+  dst
 )
 
 (defun othercam-calc ((arg0 float))
