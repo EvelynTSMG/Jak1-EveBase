@@ -376,7 +376,7 @@
 
 (defmethod process-taskable-method-43 ((this red-sagecage))
   (if (-> this beam-on) (return #f))
-  (when (ambient-control-method-10 (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
+  (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
         ((< 0.6666667 f0-2) (play-ambient (-> this ambient) "RED-AM01" #f (-> this root trans)))
@@ -452,7 +452,7 @@
 
 (defmethod process-taskable-method-43 ((this blue-sagecage))
   (if (-> this beam-on) (return #f))
-  (when (ambient-control-method-10 (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
+  (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
         ((< 0.6666667 f0-2) (play-ambient (-> this ambient) "BLU-AM01" #f (-> this root trans)))
@@ -519,7 +519,7 @@
 
 (defmethod process-taskable-method-43 ((this yellow-sagecage))
   (if (-> this beam-on) (return #f))
-  (when (ambient-control-method-10 (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
+  (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 122880.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
         ((< 0.6666667 f0-2) (play-ambient (-> this ambient) "YEL-AM01" #f (-> this root trans)))

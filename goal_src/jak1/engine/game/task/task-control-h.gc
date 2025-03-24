@@ -82,7 +82,7 @@
   :pack-me
   (:methods
    (ambient-control-method-9 (_type_) none)
-   (ambient-control-method-10 (_type_ vector time-frame float process-drawable) vector)
+   (vector-for-ambient-limited (_type_ vector time-frame float process-drawable) vector)
    (play-ambient (_type_ string symbol vector) symbol)))
 
 (deftype process-taskable (process-drawable)

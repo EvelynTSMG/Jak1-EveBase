@@ -86,7 +86,7 @@
   (-> this draw art-group data 7))
 
 (defmethod process-taskable-method-43 ((this gambler))
-  (when (ambient-control-method-10 (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 61440.0 this)
+  (when (vector-for-ambient-limited (-> this ambient) (new 'stack-no-clear 'vector) (seconds 30) 61440.0 this)
     (let ((f0-2 (rand-float-gen)))
       (cond
         ((< 0.9230769 f0-2) (play-ambient (-> this ambient) "GAM-AM01" #f (-> this root trans)))

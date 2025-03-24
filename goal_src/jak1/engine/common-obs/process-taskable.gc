@@ -687,16 +687,21 @@
   0
   (none))
 
-(defmethod ambient-control-method-10 ((this ambient-control) (arg0 vector) (arg1 time-frame) (arg2 float) (arg3 process-drawable))
-  (when (< (- (-> *display* game-frame-counter) (-> this last-ambient-time)) arg1)
-    (set! arg0 (the-as vector #f))
-    (goto cfg-6))
-  (vector-for-ambient arg3 arg0)
-  (when (< arg2 (vector-length arg0))
-    (set! arg0 (the-as vector #f))
-    (goto cfg-6))
-  (label cfg-6)
-  arg0)
+(defmethod vector-for-ambient-limited ((this ambient-control) (dst vector) (min-time-since-last time-frame) (max-dist float) (source process-drawable))
+  (when (>= min-time-since-last (- (-> *display* game-frame-counter) (-> this last-ambient-time)))
+    (set! dst (the-as vector #f))
+    (goto early-ret)
+  )
+
+  (vector-for-ambient source dst)
+  (when (< max-dist (vector-length dst))
+    (set! dst (the-as vector #f))
+    (goto early-ret)
+  )
+
+  (label early-ret)
+  dst
+)
 
 (defmethod play-ambient ((this ambient-control) (arg0 string) (arg1 symbol) (arg2 vector))
   (when (and (not (string= arg0 (-> this last-ambient)))
@@ -708,9 +713,13 @@
     (return #t))
   #f)
 
-(defun vector-for-ambient ((arg0 process-drawable) (arg1 vector))
-  (if *target* (vector-! arg1 (target-pos 0) (-> arg0 root trans)) (vector-! arg1 (camera-pos) (-> arg0 root trans)))
-  arg1)
+(defun vector-for-ambient ((source process-drawable) (dst vector))
+  (if *target*
+    (vector-! dst (target-pos 0) (-> source root trans))
+    (vector-! dst (camera-pos)   (-> source root trans))
+  )
+  arg1
+)
 
 (defun othercam-calc ((arg0 float))
   (set! (-> *camera-other-fov* data) (* 2.0 (atan (/ 14.941477 (* 20.3 arg0)) 1.0)))
