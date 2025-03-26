@@ -28,7 +28,6 @@
     (flags                bpath-flags)
     (num-knots                    int)
     (length                     float)
-    (center                    vector :inline) ; only for displaying path marks lol
     (points              vector-array)
     (rotation            vector-array) ; roll, pitch, yaw; in degrees
     (cached                    symbol)
@@ -121,15 +120,6 @@
         (segment-count (* res (- (-> self num-knots) 1)))
       )
     (set! length-table (new 'process 'boxed-array float segment-count))
-
-    ; Fill in the center point
-    (let ((avg (new-stack-vector0)))
-      (dotimes (i (-> self num-knots))
-        (vector+!! avg (-> self points data (* i 3)))
-      )
-
-      (vector-float*! (-> self center) avg (/ 1.0 (-> self num-knots)))
-    )
 
     ; Filling the length table
     (let (
@@ -363,7 +353,7 @@
   (add-debug-text-sphere
     #t
     (bucket-id debug-no-zbuf)
-    (-> self center)
+    (-> self entity trans)
     (-> *bpath-info* debug-knot-radius)
     (string-format (res-lump-struct (-> self entity) 'name structure))
     (new 'static 'rgba :r #xc0 :b #xc0 :a #x30)
