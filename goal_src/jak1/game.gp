@@ -1858,6 +1858,8 @@
  "ui/progress/progress-h.gc"
  "ps2/rpc-h.gc"
  "geometry/path-h.gc"
+ "geometry/bpath-h.gc"
+ "nav/bpath-ctrl-h.gc"
  "nav/navigate-h.gc"
  "load/load-dgo.gc"
  "load/ramdisk.gc"
@@ -2124,4 +2126,3 @@
 (group-list "all-code"
   `(,@(reverse *all-gc*))
   )
-

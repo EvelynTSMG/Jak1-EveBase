@@ -25,6 +25,10 @@
   "Get the fractional part of a float"
   (- x (truncate x)))
 
+(defun ceil ((x float))
+  (if (basically-not-zero? (fractional-part x)) (truncate (+ x 1)) (truncate x))
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bitfield types
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -94,6 +98,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; utility macros
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro lerp! (place towards amount)
+  "Macro to use lerp in-place"
+  `(set! ,place (lerp ,place ,towards ,amount))
+)
 
 (defmacro seek! (place target rate)
   "Macro to use seek in-place. place is the base, and where the result is stored."
@@ -172,6 +181,11 @@
 (defun rand-vu-percent? ((prob float))
   "Get a boolean that's true with the given probability."
   (>= prob (rand-vu)))
+
+(defun rand-vu-bool? ()
+  "Flip a coin"
+  (>= 0.5 (rand-vu))
+)
 
 (defun rand-vu-int-range ((first int) (second int))
   "Get an integer the given range. Inclusive of both?
