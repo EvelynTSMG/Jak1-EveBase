@@ -139,6 +139,25 @@
 
   "actors": [
     {
+      "trans": [-5.0, 6.0, 40.0], // Unused
+      "etype": "bpath",
+      "game_task": 0,                   // Unused
+      "quat": [0, 0, 0, 1],             // Unused
+      "bsphere": [-5.0, 6.0, 40.0, 100.0], // Unused?
+      "lump": {
+        "name": "bpath-test",
+        "points": ["vector3m",
+          [  0.0,  6.0, 40.0],
+          [  0.0, 11.0, 40.0],
+          [ -5.0, 11.0, 40.0],
+          [ -5.0,  6.0, 40.0],
+          [ -5.0,  1.0, 40.0],
+          [-10.0,  1.0, 40.0],
+          [-10.0,  6.0, 40.0]
+        ]
+      }
+    },
+    {
       "trans": [-21.6238, 20.0496, 17.1191], // translation
       "etype": "fuel-cell", // actor type
       "game_task": "(game-task none)", // associated game task (for powercells, etc)
