@@ -1040,6 +1040,19 @@
               (set! s0-1 (fmin 1.0 (fmax 0.0 v1-4)))))
           (+ (if (< f22-0 f20-0) f26-0 f24-0) (/ gp-0 f30-0)))))))
 
+(defun bezier-interpolate ((a float) (a-out float) (b-in float) (b float) (t float))
+  ; Formula from Wikipedia article on Bezier curves.
+  (let* (
+        (omt (- 1.0 t))
+        (omt2 (* omt omt))
+        (omt3 (* omt2 omt))
+        (t2 (* t t))
+        (t3 (* t2 t))
+      )
+    (+ (* omt3 a) (* 3.0 t omt2 a-out) (* 3.0 t2 omt b-in) (* t3 b))
+  )
+)
+
 ;; Compute a point on a curve using a bezier spline
 ;; Params:
 ;;   `dst` will be filled with the computated position
@@ -1047,42 +1060,34 @@
 ;;   `t` is the percentage of the curve the point should be at, and must be between 0.0 and 1.0
 ;; Returns:
 ;;   `dst` for chaining
-(defun bezier-interpolate ((dst vector) (a vector) (a-out vector) (b-in vector) (b vector) (t float))
-  ;; Polynomial Coeff (cubic):
-  ;; P0
-  ;; + t   * (-3P0 + 3P1)
-  ;; + t^2 * ( 3P0 - 6P1 + 3P2)
-  ;; + t^3 * ( -P0 + 3P1 - 3P2 + P3)
-  (let* (
-        (t2 (* t t)) (t3 (* t t t))
-        (p0 a) (p1 a-out) (p2 b-in) (p3 b)
-        (a1 (vector+! (new-stack-vector0) (vector*f! (new-stack-vector0) p0 -3.0) (vector*f! (new-stack-vector0) p1  3.0)))
-        (a2 (vector+! (new-stack-vector0) (vector*f! (new-stack-vector0) p0  3.0) (vector+! (new-stack-vector0) (vector*f! (new-stack-vector0) p1 -6.0) (vector*f! (new-stack-vector0) p2  3.0))))
-        (a3 (vector+! (new-stack-vector0) (vector*f! (new-stack-vector0) p0 -1.0) (vector+! (new-stack-vector0) (vector*f! (new-stack-vector0) p1  3.0) (vector+! (new-stack-vector0) (vector*f! (new-stack-vector0) p2 -3.0) p3))))
-      )
-    ;; (format 0 " DATA:~%")
-    ;; (format 0 "   dst = (~M, ~M, ~M)~%" (-> p0 x) (-> p0 y) (-> p0 z))
-    ;; (format 0 "       + (~M, ~M, ~M)~%" (-> a1 x) (-> a1 y) (-> a1 z))
-    ;; (format 0 "       + (~M, ~M, ~M)~%" (-> a2 x) (-> a2 y) (-> a2 z))
-    ;; (format 0 "       + (~M, ~M, ~M)~%" (-> a3 x) (-> a3 y) (-> a3 z))
-    (vector*f! a1 a1 t)
-    (vector*f! a2 a2 t2)
-    (vector*f! a3 a3 t3)
-    ;; (format 0 "   ma1 = (~M, ~M, ~M)~%" (-> a1 x) (-> a1 y) (-> a1 z))
-    ;; (format 0 "   ma2 = (~M, ~M, ~M)~%" (-> a2 x) (-> a2 y) (-> a2 z))
-    ;; (format 0 "   ma3 = (~M, ~M, ~M)~%" (-> a3 x) (-> a3 y) (-> a3 z))
-    (vector+! dst (new-stack-vector0) p0)
-    (vector+! dst dst a1)
-    (vector+! dst dst a2)
-    (vector+! dst dst a3)
+(defun bezier-interpolate-vector ((dst vector) (a vector) (a-out vector) (b-in vector) (b vector) (t float))
+  (set-vector! dst
+    (bezier-interpolate (-> a x) (-> a-out x) (-> b-in x) (-> b x) t)
+    (bezier-interpolate (-> a y) (-> a-out y) (-> b-in y) (-> b y) t)
+    (bezier-interpolate (-> a z) (-> a-out z) (-> b-in z) (-> b z) t)
+    1.0
+  )
 
-    ;; (format 0 "Bezier Interp:~%")
-    ;; (format 0 "    t = ~F~%" t)
-    ;; (format 0 "   p0 = [~M, ~M, ~M]~%" (-> p0  x) (-> p0  y) (-> p0  z))
-    ;; (format 0 "   p1 = [~M, ~M, ~M]~%" (-> p1  x) (-> p1  y) (-> p1  z))
-    ;; (format 0 "   p2 = [~M, ~M, ~M]~%" (-> p2  x) (-> p2  y) (-> p2  z))
-    ;; (format 0 "   p3 = [~M, ~M, ~M]~%" (-> p3  x) (-> p3  y) (-> p3  z))
-    ;; (format 0 "  dst = [~M, ~M, ~M]~%" (-> dst x) (-> dst y) (-> dst z))
+  dst
+)
+
+(defun bezier-derivative ((a float) (a-out float) (b-in float) (b float) (t float))
+  ; Formula from Wikipedia article on Bezier curves.
+  (let* (
+        (omt (- 1.0 t))
+        (omt2 (* omt omt))
+        (t2 (* t t))
+      )
+    (+ (* omt2 3.0 (- a-out a)) (* omt t 6.0 (- b-in a-out)) (* t2 3.0 (- b b-in)))
+  )
+)
+
+(defun bezier-derivative-vector ((dst vector) (a vector) (a-out vector) (b-in vector) (b vector) (t float))
+  (set-vector! dst
+    (bezier-derivative (-> a x) (-> a-out x) (-> b-in x) (-> b x) t)
+    (bezier-derivative (-> a y) (-> a-out y) (-> b-in y) (-> b y) t)
+    (bezier-derivative (-> a z) (-> a-out z) (-> b-in z) (-> b z) t)
+    1.0
   )
 
   dst

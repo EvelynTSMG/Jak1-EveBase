@@ -1,0 +1,38 @@
+(in-package goal)
+(require "engine/geometry/bpath-h.gc")
+
+;; Conductors use this to decide whether to use speed or time to keep sync
+;; When conducting over a single path, "distance" is better
+;; When conducting over multiple paths, "time" is better
+(defenum bpath-conduct-mode
+  :type int32
+  (distance)
+  (time)
+)
+
+(deftype bpath-actor-info (structure)
+  (
+    (offset float)
+  )
+)
+
+;; Conductors are analogous to the base game's sync-info
+;; You can ask a conductor to 
+(deftype bpath-conductor (process)
+  (
+    (mode     bpath-conduct-mode ) ; determines whether the controller uses speed-m or speed-t
+    (speed-m              meters ) ; per second
+    (speed-t               float ) ; per second
+    (progress              float )
+  )
+
+  (:methods
+    (sample (_type_ vector bpath bpath-actor-info) vector)
+    (sample-angle (_type_ vector bpath bpath-actor-info) vector)
+  )
+
+  (:states
+    active
+    idle
+  )
+)

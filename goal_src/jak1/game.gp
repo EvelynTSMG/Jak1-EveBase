@@ -1859,7 +1859,7 @@
  "ps2/rpc-h.gc"
  "geometry/path-h.gc"
  "geometry/bpath-h.gc"
- "nav/bpath-ctrl-h.gc"
+ "nav/bpath-conductor-h.gc"
  "nav/navigate-h.gc"
  "load/load-dgo.gc"
  "load/ramdisk.gc"
