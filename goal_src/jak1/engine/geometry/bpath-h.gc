@@ -36,6 +36,7 @@
     (num-knots                    int)
     (length                     float)
     (points              vector-array)
+    (cycle-length               float) ; optional, conductors may complain if missing
     (rotations          (array float)) ; for normals ;;TODO: Make this optional
     (cached?                   symbol)
     (num-cached-points            int)
@@ -64,6 +65,13 @@
 (defmethod init-from-entity! ((self bpath) (e entity-actor))
   (local-vars (tag res-tag))
   (set! tag (new 'static 'res-tag))
+
+  (let ((cycle-length (res-lump-float (-> self entity) 'cycle-length :default (the-as float #f))))
+    (if cycle-length
+      (set! (-> self cycle-length) (fsec cycle-length))
+      (set! (-> self cycle-length) (the-as float #f))
+    )
+  )
 
   (let ((lump-points (res-lump-data (-> self entity) 'points (inline-array vector) :tag-ptr (& tag))))
     (set! (-> self points) (new 'process 'vector-array (the-as int (-> tag elt-count))))
@@ -252,10 +260,7 @@
 (defmethod sample ((self bpath) (dst vector) (t float))
   (if (logtest? (-> self flags) (bpath-flags full-precision))
     (sample-accurate self dst t)
-    (begin ; #f
-      (unless (-> self cached?) (cache self (the-as int #f) (the-as float #f)))
-      (sample-cache self dst t)
-    )
+    (sample-cache self dst t)
   )
 )
 
@@ -302,6 +307,7 @@
 ;; Returns:
 ;;   `dst` for chaining
 (defmethod sample-cache ((self bpath) (dst vector) (t float))
+  (unless (-> self cached?) (cache self (the-as int #f) (the-as float #f)))
   (when (basically-zero? (- t 1.0))
     (vector-copy! dst (-> self cached-points data (- (-> self num-cached-points) 1)))
     (return dst)
@@ -332,10 +338,7 @@
 (defmethod sample-rot ((self bpath) (t float))
   (if (logtest? (-> self flags) (bpath-flags full-precision))
     (sample-rot-accurate self t)
-    (begin ; #f
-      (unless (-> self cached?) (cache self (the-as int #f) (the-as float #f)))
-      (sample-rot-cache self t)
-    )
+    (sample-rot-cache self t)
   )
 )
 
@@ -373,6 +376,7 @@
 ;; Returns:
 ;;   Rotation of specified point on the path
 (defmethod sample-rot-cache ((self bpath) (t float))
+  (unless (-> self cached?) (cache self (the-as int #f) (the-as float #f)))
   (when (fequal? t 1.0)
     (return (-> self cached-rotations (- (-> self num-cached-points) 1)))
   )
